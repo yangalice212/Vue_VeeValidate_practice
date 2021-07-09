@@ -4,6 +4,8 @@ export default {
   data() {
     return {
       modal: "",
+      status: {},
+      tempProduct: {},
       qty: 1,
     };
   },
@@ -16,13 +18,11 @@ export default {
     },
   },
   watch: {
-    qty() {
-      if (typeof this.qty !== "number") {
-        this.qty = 1;
-      }
+    product() {
+      this.tempProduct = this.product;
     },
   },
   mounted() {
-    this.modal = new bootstrap.Modal(this.modal);
+    this.modal = new bootstrap.Modal(this.$refs.modal);
   },
 };

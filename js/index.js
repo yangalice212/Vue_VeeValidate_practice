@@ -6,12 +6,11 @@ const apiPath = "yangalice212";
 const app = Vue.createApp({
   data() {
     return {
-      products: [],
-      product: {},
-      cart: {},
       loadingStatus: {
         loadingItem: "",
       },
+      products: [],
+      product: {},
       form: {
         user: {
           name: "",
@@ -21,6 +20,7 @@ const app = Vue.createApp({
         },
         message: "",
       },
+      cart: {},
     };
   },
   methods: {
@@ -40,14 +40,14 @@ const app = Vue.createApp({
         });
     },
     getProduct(id) {
-      const url = `${apiUrl}/api/${apiPath}/products/${id}`;
+      const url = `${apiUrl}/api/${apiPath}/product/${id}`;
       this.loadingStatus.loadingItem = id;
       axios
         .get(url)
         .then((res) => {
           if (res.data.success) {
-            this.loadingStatus.loadingItem = "";
             this.product = res.data.product;
+            this.loadingStatus.loadingItem = "";
             this.$refs.productInfoModal.openModal();
           } else {
             alert(res.data.message);
@@ -72,15 +72,65 @@ const app = Vue.createApp({
           console.log(err);
         });
     },
-    addCart(id, qty) {
-      const url = `${apiUrl}/api/${apiPath}/cart`;
+    addCart(id, qty = 1) {
       this.loadingStatus.loadingItem = id;
+      const url = `${apiUrl}/api/${apiPath}/cart`;
       const cart = {
         product_id: id,
+        qty,
       };
-      axios.post(url, { data: cart }).then((res) => {
-        console.log(res);
-      });
+      axios
+        .post(url, { data: cart })
+        .then((res) => {
+          if (res.data.success) {
+            this.loadingStatus.loadingItem = "";
+            this.getCart();
+          } else {
+            alert(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    updateCart(item) {
+      this.loadingStatus.loadingItem = item.id;
+      const url = `${apiUrl}/api/${apiPath}/cart/${item.id}`;
+      const cart = {
+        product_id: item.product.id,
+        qty: item.qty,
+      };
+      axios
+        .put(url, { data: cart })
+        .then((res) => {
+          if (res.data.success) {
+            this.loadingStatus.loadingItem = "";
+            this.getCart();
+          } else {
+            alert(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    delCartItem(id) {
+      this.loadingStatus.loadingItem = id;
+      const url = `${apiUrl}/api/${apiPath}/cart/${id}`;
+      axios
+        .delete(url)
+        .then((res) => {
+          if (res.data.success) {
+            alert(res.data.message);
+            this.loadingStatus.loadingItem = "";
+            this.getCart();
+          } else {
+            alert(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     clearCart() {
       const url = `${apiUrl}/api/${apiPath}/carts`;
@@ -98,13 +148,47 @@ const app = Vue.createApp({
           console.log(err);
         });
     },
+    onSubmit() {
+      const url = `${apiUrl}/api/${apiPath}/order`;
+      const order = this.form;
+      axios
+        .post(url, { data: order })
+        .then((res) => {
+          if (res.data.success) {
+            alert(res.data.message);
+          } else {
+            alert(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
-  created() {
+  mounted() {
     this.getProducts();
     this.getCart();
   },
 });
 
+Object.keys(VeeValidateRules).forEach((rule) => {
+  if (rule !== "default") {
+    VeeValidate.defineRule(rule, VeeValidateRules[rule]);
+  }
+});
+
+VeeValidateI18n.loadLocaleFromURL("./zh_TW.json");
+
+// Activate the locale
+VeeValidate.configure({
+  generateMessage: VeeValidateI18n.localize("zh_TW"),
+  validateOnInput: true, // 調整為輸入字元立即進行驗證
+});
+
 app.component("productInfoModal", productInfoModal);
+
+app.component("VForm", VeeValidate.Form);
+app.component("VField", VeeValidate.Field);
+app.component("ErrorMessage", VeeValidate.ErrorMessage);
 
 app.mount("#app");
