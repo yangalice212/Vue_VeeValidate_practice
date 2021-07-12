@@ -6,59 +6,91 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
     integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
     crossorigin="anonymous" />
+  <link rel="stylesheet" href="css/all.min.css">
 </head>
 
 <body>
   <div id="app">
     <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">SweetHouse</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item me-2">
+                <a class="nav-link" aria-current="page" href="#">
+                  <i class="fas fa-home"></i>
+                  關於我們
+                </a>
+              </li>
+              <li class="nav-item me-2">
+                <a class="nav-link active" href="#">
+                  <i class="fas fa-cookie"></i>
+                  甜點列表
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <i class="fas fa-shopping-cart"></i>
+                  購物車
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
       <div class="mt-4">
-        <table class="table align-middle">
-          <thead>
-            <tr>
-              <th>圖片</th>
-              <th>商品名稱</th>
-              <th>價格</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in products" :key="item.id">
-              <td style="width: 200px">
-                <div style="height: 100px; background-size: cover; background-position: center"
-                  :style="{ 'background-image' : `url(${item.imageUrl})` }">
-                </div>
-              </td>
-              <td>
-                {{ item.title }}
-              </td>
-              <td>
-                <div class="h5">{{ item.price }} 元</div>
-                <del class="h6">原價 {{ item.origin_price }} 元</del>
-                <div class="h5">現在只要 {{ item.price }} 元</div>
-              </td>
-              <td>
-                <div class="btn-group btn-group-sm">
-                  <button type="button" class="btn btn-outline-secondary" @click="getProduct(item.id)"
-                    :disabled="loadingStatus.loadingItem === item.id">
-                    <i class="fas fa-spinner fa-pulse" v-if="loadingStatus.loadingItem === item.id"></i>
-                    查看更多
-                  </button>
-                  <button type="button" class="btn btn-outline-danger" @click="addCart(item.id)"
-                    :disabled="loadingStatus.loadingItem === item.id">
-                    <i class="fas fa-spinner fa-pulse" v-if="loadingStatus.loadingItem === item.id"></i>
-                    加到購物車
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
+        <div class="row">
+          <div class="col-md-3 list-group list-group-flush">
+            <a href="#cake" class="list-group-item list-group-item-action active" data-bs-toggle="list" role="tab" aria-current="true">
+              蛋糕
+            </a>
+            <a href="#cookie" class="list-group-item list-group-item-action" data-bs-toggle="list" role="tab" aria-current="true">餅乾</a>
+            <a href="#tart" class="list-group-item list-group-item-action" data-bs-toggle="list" role="tab" aria-current="true">甜點塔</a>
+            <a href="#pudding" class="list-group-item list-group-item-action" data-bs-toggle="list" role="tab" aria-current="true">奶酪/布丁</a>
+            <a href="#macaron" class="list-group-item list-group-item-action">馬卡龍</a>
+          </div>
+          <div class="col-md-9 tab-content">
+            <div class="tab-pane active" id="cake" role="tabpanel">
+              <ul class="row flex-wrap list-unstyled">
+                <li class="col-6 mb-4" v-for="item in products" :key="item.id">
+                  <div class="mb-1" style="height: 400px; background-size: cover; background-position: center"
+                    :style="{ 'background-image' : `url(${item.imageUrl})` }"></div>
+                    <div>
+                      <h3>{{ item.title }}</h3>
+                      <div class="d-flex">
+                        <p class="me-1">NT$ {{ item.price }} / {{ item.unit }}</p>
+                        <del>NT$ {{ item.origin_price }}</del>
+                      </div>
+                      <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-secondary" @click="getProduct(item.id)"
+                          :disabled="loadingStatus.loadingItem === item.id">
+                          <i class="fas fa-spinner fa-pulse" v-if="loadingStatus.loadingItem === item.id"></i>
+                          查看更多
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" @click="addCart(item.id)"
+                          :disabled="loadingStatus.loadingItem === item.id">
+                          <i class="fas fa-spinner fa-pulse" v-if="loadingStatus.loadingItem === item.id"></i>
+                          加到購物車
+                        </button>
+                      </div>
+                    </div>
+                </li>
+              </ul>
+            </div>
+            <div class="tab-pane" id="cookie" role="tabpanel">...</div>
+            <div class="tab-pane" id="tart" role="tabpanel">...</div>
+            <div class="tab-pane" id="pudding" role="tabpanel">...</div>
+            <div class="tab-pane" id="macaron" role="tabpanel">...</div>
+          </div>
+        </div>
+      
         <product-info-modal ref="productInfoModal" :product="product" @add-cart="addCart"></product-info-modal>
 
         <!-- 購物車列表 -->
@@ -142,7 +174,7 @@
           <div class="mb-3">
             <label for="tel" class="form-label">收件人電話</label>
             <v-field id="tel" name="電話" type="text" class="form-control" :class="{ 'is-invalid': errors['電話'] }"
-              placeholder="請輸入電話" rules="required" v-model="form.user.tel"></v-field>
+              placeholder="請輸入電話" :rules="isPhone" v-model="form.user.tel"></v-field>
             <error-message name="電話" class="invalid-feedback"></error-message>
           </div>
 
@@ -182,17 +214,16 @@
                 <img class="img-fluid" :src="tempProduct.imageUrl" alt="tempProduct.title">
               </div>
               <div class="col-sm-6">
-                <span class="badge bg-primary rounded-pill">{{  }}</span>
+                <h3>{{ tempProduct.title }}</h3>
                 <p>商品描述：{{ tempProduct.description }}</p>
                 <p>商品內容：{{ tempProduct.content }}</p>
-                <div class="h5">{{ tempProduct.price }} 元</div>
-                <del class="h6">原價 {{ tempProduct.origin_price }} 元</del>
-                <div class="h5">現在只要 {{ tempProduct.price }} 元</div>
-                <div>
-                  <div class="input-group">
-                    <input type="number" class="form-control" v-model.number="qty" min="1">
-                    <button type="button" class="btn btn-primary" @click="$emit('add-cart', tempProduct.id , qty )">加入購物車</button>
-                  </div>
+                <div class="d-flex">
+                  <p class="me-1">NT$ {{ tempProduct.price }} / {{ tempProduct.unit }}</p>
+                  <del>NT$ {{ tempProduct.origin_price }}</del>
+                </div>
+                <div class="input-group">
+                  <input type="number" class="form-control" v-model.number="qty" min="1">
+                  <button type="button" class="btn btn-primary" @click="$emit('add-cart', tempProduct.id , qty )">加入購物車</button>
                 </div>
               </div>
             </div>

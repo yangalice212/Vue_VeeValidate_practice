@@ -31,6 +31,7 @@ const app = Vue.createApp({
         .then((res) => {
           if (res.data.success) {
             this.products = res.data.products;
+            console.log(this.products);
           } else {
             alert(res.data.message);
           }
@@ -84,6 +85,7 @@ const app = Vue.createApp({
         .then((res) => {
           if (res.data.success) {
             this.loadingStatus.loadingItem = "";
+            alert(res.data.message);
             this.getCart();
           } else {
             alert(res.data.message);
@@ -105,6 +107,7 @@ const app = Vue.createApp({
         .then((res) => {
           if (res.data.success) {
             this.loadingStatus.loadingItem = "";
+            alert(res.data.message);
             this.getCart();
           } else {
             alert(res.data.message);
@@ -123,6 +126,7 @@ const app = Vue.createApp({
           if (res.data.success) {
             alert(res.data.message);
             this.loadingStatus.loadingItem = "";
+            alert(res.data.message);
             this.getCart();
           } else {
             alert(res.data.message);
@@ -147,6 +151,10 @@ const app = Vue.createApp({
         .catch((err) => {
           console.log(err);
         });
+    },
+    isPhone(value) {
+      const phoneNumber = /^(09)[0-9]{8}$/
+      return phoneNumber.test(value) ? true : '需要正確的電話號碼'
     },
     onSubmit() {
       const url = `${apiUrl}/api/${apiPath}/order`;
